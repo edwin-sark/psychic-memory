@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Responsive Landing Page</title>
+  <style>
+    /* Your CSS styles go here */
+    /* This is just a basic example, you can customize it further */
+
+    /* Fluid container */
+    .container {
+      max-width: 100%;
+      padding: 0 20px;
+      margin: 0 auto;
+    }
+
+    /* Grid layout */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    /* Image container */
+    .grid-item {
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Responsive images */
+    .grid-item img {
+      width: 100%;
+      height: auto;
+    }
+
+    /* Price tag */
+    .price-tag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #333;
+      color: #fff;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+
+    /* Description */
+    .description {
+      margin-top: 10px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    /* Favorites button */
+    .add-to-favorites {
+      display: inline-block;
+      margin-top: 10px;
+      padding: 5px 10px;
+      background-color: #333;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .add-to-favorites:hover {
+      background-color: #555;
+    }
+
+    /* Favorites list */
+    .favorites-list-item {
+      position: relative;
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .remove-from-favorites {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      color: #fff;
+      background-color: #333;
+      border: none;
+      border-radius: 50%;
+      padding: 3px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+  </style>
+  <script>
+   document.addEventListener('DOMContentLoaded', function() {
+  const addToFavoritesButtons = document.querySelectorAll('.add-to-favorites');
+  const favoritesList = document.getElementById('favorites-list');
+  const favoritesImages = [];
+
+  addToFavoritesButtons.forEach(function(button) {
+    button.addEventListener('click', function() {
+      const imageContainer = this.parentNode;
+      const imageSrc = imageContainer.querySelector('img').src;
+
+      if (favoritesImages.includes(imageSrc)) {
+        // Image is already in favorites, so remove it
+        const index = favoritesImages.indexOf(imageSrc);
+        favoritesImages.splice(index, 1);
+        favoritesList.removeChild(favoritesList.children[index]);
+        this.textContent = 'Add to Favorites';
+      } else {
+        // Add image to favorites
+        favoritesImages.push(imageSrc);
+
+        const listItem = document.createElement('li');
+        listItem.classList.add('favorites-list-item');
+        listItem.innerHTML = `
+          <div class="favorites-list-item-container">
+            <img src="${imageSrc}" alt="Favorite Design">
+            <button class="remove-from-favorites" data-src="${imageSrc}" title="Remove from Favorites">&times;</button>
+          </div>
+        `;
+        favoritesList.appendChild(listItem);
+
+        this.textContent = 'Remove from Favorites';
+      }
+    });
+  });
+
+  favoritesList.addEventListener('click', function(event) {
+    if (event.target.classList.contains('remove-from-favorites')) {
+      const button = event.target;
+      const imageSrc = button.dataset.src;
+
+      const listItem = button.closest('.favorites-list-item');
+      favoritesList.removeChild(listItem);
+
+      const correspondingButton = document.querySelector(`.add-to-favorites[data-src="${imageSrc}"]`);
+      if (correspondingButton) {
+        correspondingButton.textContent = 'Add to Favorites';
+      }
+
+      const index = favoritesImages.indexOf(imageSrc);
+      if (index !== -1) {
+        favoritesImages.splice(index, 1);
+      }
+    }
+  });
+});
+
+  </script>
+</head>
+<body>
+  <header>
+    <!-- Your header content goes here -->
+  </header>
+  
+  <main>
+    <div class="container">
+      <div class="grid">
+        <!-- Sample design images -->
+        <div class="grid-item">
+          <img src="media/about.jpg" alt="Design 1">
+          <div class="price-tag">$99</div>
+          <div class="description">Description for Design 1</div>
+          <button class="add-to-favorites">Add to Favorites</button>
+        </div>
+        <div class="grid-item">
+          <img src="media/about.webp" alt="Design 2">
+          <div class="price-tag">$149</div>
+          <div class="description">Description for Design 2</div>
+          <button class="add-to-favorites">Add to Favorites</button>
+        </div>
+        <div class="grid-item">
+          <img src="media/house.jpg" alt="Design 3">
+          <div class="price-tag">$199</div>
+          <div class="description">Description for Design 3</div>
+          <button class="add-to-favorites">Add to Favorites</button>
+        </div>
+        <!-- Add more images as needed -->
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    <!-- Your footer content goes here -->
+  </footer>
+
+  <div>
+    <h2>Your Favorites:</h2>
+    <ul id="favorites-list"></ul>
+  </div>
+</body>
+</html>
